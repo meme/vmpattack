@@ -139,8 +139,10 @@ namespace vmpattack
 
         // Copy each section.
         //
-        for ( const vtil::section_descriptor& section : image )
+        for ( size_t i = 0; i < image.get_section_count(); i++ )
         {
+            auto section = image.get_section( i );
+
             // Sanity check for potentially broken PEs.
             //
             if ( image.raw_bytes.size() >= section.physical_address + section.physical_size )
@@ -567,10 +569,10 @@ namespace vmpattack
         //
         auto within_potential_vmp_sections = [&]( uint64_t rva ) -> bool
         {
-            auto [rva_section, rva_section_size] = image.rva_to_section( rva );
+            auto name = image.rva_to_section( rva ).name;
 
             for ( const vtil::section_descriptor& section : potential_vmp_sections )
-                if ( rva_section.name == section.name )
+                if ( name == section.name )
                     return true;
 
             return false;
@@ -585,9 +587,11 @@ namespace vmpattack
 
         // Enumerate all sections.
         //
-        for ( const vtil::section_descriptor& section : image )
+        for ( size_t i = 0; i < image.get_section_count(); i++ )
         {
-            std::string sanitized_name = sanitize_section_name( section.name );
+            auto section = image.get_section( i );
+
+            std::string sanitized_name = sanitize_section_name( std::string( section.name ) );
 
             if ( sanitized_name == section_name )
             {

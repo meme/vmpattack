@@ -7,6 +7,7 @@ FetchContent_Declare(
     VTIL-Core
     GIT_REPOSITORY https://github.com/vtil-project/VTIL-Core
     GIT_SHALLOW    true
+    GIT_TAG        exp-optimizer-v2
 )
 FetchContent_MakeAvailable(VTIL-Core)
 
